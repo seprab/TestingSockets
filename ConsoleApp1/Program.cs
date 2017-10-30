@@ -7,10 +7,29 @@ using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 
-
 namespace ConsoleApp1
 {
     class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.Write("¿Cual sera su rol? \n");
+            Console.Write("Servidor (S) o Cliente (C):  ");
+            string consoleInput = Console.ReadLine();
+            var class1 = new Class1();
+            switch (consoleInput)
+            {
+                case ("S"):
+                    class1.CrearServer();
+                    break;
+                case ("C"):
+                    class1.CrearCliente();
+                    break;
+            }        
+        }    
+    }
+
+    public class Class1
     {
         private static Socket socket = null;
         private static bool corriendo = false;
@@ -21,31 +40,16 @@ namespace ConsoleApp1
         int ListeningPort = 0;
         IPEndPoint ep = null;
 
-        void Main(string[] args)
-        {
-            Console.Write("¿Cual sera su rol? \n");
-            Console.Write("Servidor (S) o Cliente (C):  ");
-            string consoleInput = Console.ReadLine();
-            switch(consoleInput)
-            {
-                case ("S"):
-                    CrearServer();
-                    break;
-                case ("C"):
-                    CrearCliente();
-                    break;
-            }        
-        }
-        private void CrearServer()
+
+        public void CrearServer()
         {
             IPAddress ipEscucha = IPAddress.Any;
             Console.Write("Puerto por el cual comunicarse:  ");
-            ListeningPort = Console.Read();           
+            ListeningPort = Console.Read();
             puntoLocal = new IPEndPoint(ipEscucha, ListeningPort);
             new Thread(Escuchador).Start();
         }
-
-        private static void Escuchador()
+        private void Escuchador()
         {
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket.Bind(puntoLocal);
@@ -66,22 +70,22 @@ namespace ConsoleApp1
                 Console.WriteLine("Recibí: " + datosRecibidos);
             }
         }
-        void Mensajear()
+        private void Mensajear()
         {
             while (corriendo)
             {
                 string mensajeXenviar = Console.ReadLine();
-                if(mensajeXenviar != "")
+                if (mensajeXenviar != "")
                 {
                     byte[] datosEnBytes = Encoding.Default.GetBytes(mensajeXenviar);
                     cliente.Send(datosEnBytes, datosEnBytes.Count());
                 }
                 var receivedData = cliente.Receive(ref ep);
-                Console.Write(ep.ToString()+":   ");
+                Console.Write(ep.ToString() + ":   ");
                 Console.Read();
             }
         }
-        void CrearCliente()
+        public void CrearCliente()
         {
             Console.Write("Ingrese IP del servidor:  ");
             ServerIP = Console.ReadLine();
