@@ -16,26 +16,40 @@ namespace ConsoleApp1
         private static bool corriendo = false;
         private static IPEndPoint puntoLocal = null;
 
+        UdpClient cliente = null;
+        String ServerIP = "";
+        int ListeningPort = 0;
+        IPEndPoint ep = null;
 
-        static void Main(string[] args)
+        void Main(string[] args)
         {
-            IPAddress ipEscucha = IPAddress.Any; //indicamos que escuche por cualquier tarjeta de red local 
-            //IPAddress ipEscucha = IPAddress.Parse("0.0.0.0"); //o podemos indicarle la IP de la tarjeta de red local 
-            int puertoEscucha = 8000; //puerto por el cual escucharemos datos             
-            puntoLocal = new IPEndPoint(ipEscucha, puertoEscucha);
+            Console.Write("¿Cual sera su rol? \n");
+            Console.Write("Servidor (S) o Cliente (C):  ");
+            string consoleInput = Console.ReadLine();
+            switch(consoleInput)
+            {
+                case ("S"):
+                    CrearServer();
+                    break;
+                case ("C"):
+                    CrearCliente();
+                    break;
+            }        
+        }
+        private void CrearServer()
+        {
+            IPAddress ipEscucha = IPAddress.Any;
+            Console.Write("Puerto por el cual comunicarse:  ");
+            ListeningPort = Console.Read();           
+            puntoLocal = new IPEndPoint(ipEscucha, ListeningPort);
             new Thread(Escuchador).Start();
-            Console.ReadLine(); //esperar a que el usuario escriba algo y de enter 
-            corriendo = false; //finalizar el servidor 
         }
 
         private static void Escuchador()
         {
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket.Bind(puntoLocal);
-            Console.WriteLine("escuchando...");
-            //declarar buffer para recibir los datos y le damos un tamaño máximo de datos recibidos por cada mensaje 
             byte[] buffer = new byte[1024];
-            //definir objeto para obtener la IP y Puerto de quien nos envía los datos 
             EndPoint ipRemota = new IPEndPoint(IPAddress.Any, 0);
             corriendo = true;
 
@@ -52,16 +66,33 @@ namespace ConsoleApp1
                 Console.WriteLine("Recibí: " + datosRecibidos);
             }
         }
-        private static void Enviar()
+        void Mensajear()
         {
-            string datosAEnviar = "aqui poner datos a enviar";
-            string ipDestino = "190.144.144.144"; //poner ip destino
-            int puertoDestino = 8002;
-            byte[] datosEnBytes = Encoding.Default.GetBytes(datosAEnviar);
-            EndPoint ipPuertoRemoto = new IPEndPoint(IPAddress.Parse(ipDestino), puertoDestino);
-            socket.SendTo(datosEnBytes, ipPuertoRemoto);
-            //si ya tienes un EndPoint como por ejemplo el de quien  
-            //te ha enviado datos, entonces puedes usar ese en el método SendTo 
+            while (corriendo)
+            {
+                string mensajeXenviar = Console.ReadLine();
+                if(mensajeXenviar != "")
+                {
+                    byte[] datosEnBytes = Encoding.Default.GetBytes(mensajeXenviar);
+                    cliente.Send(datosEnBytes, datosEnBytes.Count());
+                }
+                var receivedData = cliente.Receive(ref ep);
+                Console.Write(ep.ToString()+":   ");
+                Console.Read();
+            }
+        }
+        void CrearCliente()
+        {
+            Console.Write("Ingrese IP del servidor:  ");
+            ServerIP = Console.ReadLine();
+            Console.Write("Puerto por el cual comunicarse:  ");
+            ListeningPort = Console.Read();
+
+            cliente = new UdpClient();
+            ep = new IPEndPoint(IPAddress.Parse(ServerIP), ListeningPort); // endpoint where server is listening
+            cliente.Connect(ep);
+            corriendo = true;
+            new Thread(Mensajear).Start();
         }
     }
 }

@@ -4,3 +4,9 @@ c:\users\sergi\OneDrive\colegio\Documentos\Visual Studio 2017\Projects\ConsoleAp
 c:\users\sergi\OneDrive\colegio\Documentos\Visual Studio 2017\Projects\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.csprojResolveAssemblyReference.cache
 c:\users\sergi\OneDrive\colegio\Documentos\Visual Studio 2017\Projects\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.exe
 c:\users\sergi\OneDrive\colegio\Documentos\Visual Studio 2017\Projects\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.pdb
+C:\Users\sergi\Documents\Programas\TestingSockets\ConsoleApp1\bin\Debug\ConsoleApp1.exe.config
+C:\Users\sergi\Documents\Programas\TestingSockets\ConsoleApp1\obj\Debug\ConsoleApp1.exe
+C:\Users\sergi\Documents\Programas\TestingSockets\ConsoleApp1\obj\Debug\ConsoleApp1.pdb
+C:\Users\sergi\Documents\Programas\TestingSockets\ConsoleApp1\bin\Debug\ConsoleApp1.exe
+C:\Users\sergi\Documents\Programas\TestingSockets\ConsoleApp1\bin\Debug\ConsoleApp1.pdb
+C:\Users\sergi\Documents\Programas\TestingSockets\ConsoleApp1\obj\Debug\ConsoleApp1.csprojResolveAssemblyReference.cache
